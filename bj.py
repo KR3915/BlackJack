@@ -8,6 +8,8 @@ space = "----------------------------------------------------"
 hit_stand = ""
 player_total = 0
 player_cards = ""
+balance = 1000
+win = False
 #create BJ card
 def randomcard():
     card = ""
@@ -100,9 +102,17 @@ def dealer_turn():
                 if val_total >= player_total:
                     print(f"dealers cards: {card_total}\nvalue: {card_value} \n ........................................\nyour cards: {player_cards} \nvalue: {player_total}")
                     print("you lost!\n")
+                    win = False
+                    return win
             else:
                 print(f"dealers cards: {card_total}\nvalue: {card_value} \n ........................................\nyour cards: {player_cards} \nvalue: {player_total}")
                 print("you won!\n")
+                win = True
+                return win
+def game():
+    print(f"WELCOME TO BLACKJACK!\n PLACE YOUR BET                           ballance:{balance}")
+    bet = int(input("\n"))
 
 dealer_turn()
+
 
