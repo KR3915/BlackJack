@@ -1,4 +1,5 @@
 import random
+isplaying = True
 #sigma
 i = 0
 suit = ["C", "H", "S", "D"]
@@ -109,10 +110,30 @@ def dealer_turn():
                 print("you won!\n")
                 win = True
                 return win
+#game
 def game():
-    print(f"WELCOME TO BLACKJACK!\n PLACE YOUR BET                           ballance:{balance}")
-    bet = int(input("\n"))
-
-dealer_turn()
-
+    balance = 1000
+    print(f"WELCOME TO BLACKJACK!\n                         ballance:{balance}")
+    bet = (input("\nPLACE YOUR BET(input x for game to end"))
+    bet = str(bet)
+    print (type(bet))
+    while isplaying == True:
+        
+        #betting
+        while not bet.isalpha() and bet and not bet.isnumeric():
+            if bet.isnumeric():
+                bet = int(bet)  
+            elif bet.isalpha() and bet == "x":
+                bet = str(bet)
+            else:
+                print("enter valid input!")
+        win = dealer_turn()
+        if win == True:
+            balance += int(bet)
+        else:
+            balance = balance - int(bet)
+        bet = input("\nPLACE YOUR BET(input x for game to end")
+        bet = str(bet)
+print("ok")
+game()
 
