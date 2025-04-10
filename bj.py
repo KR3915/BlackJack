@@ -112,7 +112,10 @@ def dealer_turn():
         card_total += (f"{str(card)} ")
         if val_total >= 17:
             if val_total <= 21:
-                if val_total >= player_val:
+                if val_total == player_val:
+                    print(f"dealers cards: {card_total}\nvalue: {val_total} \n\nyour cards: {player_cards} \nvalue: {player_val}")
+                    print("push!\n")
+                if val_total > player_val:
                     print(f"dealers cards: {card_total}\nvalue: {val_total} \n\nyour cards: {player_cards} \nvalue: {player_val}")
                     print("you lost!\n")
                     win = False
