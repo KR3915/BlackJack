@@ -13,7 +13,7 @@ win = False
 #create BJ card
 def randomcard():
     card = ""
-    card += value_list[random.randint(0, len(value_list)-1)]
+    card += value_list[random.randint(5, len(value_list)-1)]
     card += suit[random.randrange(0, len(suit) - 1)]
     return card
 #extracts value from the cargd
@@ -21,11 +21,11 @@ def evaluate():
     bj_card = randomcard()
     card = bj_card[0]
     if card.isnumeric():
-        value = int(bj_card[0:len(bj_card) - 1])
-    elif card == "J" or "Q" or "K" or:
-        value = 10
+        value = int(card)
     elif card == "A":
-        value = 11
+     value = 11
+    elif card == "J" or "Q" or "K" :
+        value = 10
     return (value, bj_card)
 #your turn
 def yourturn():
@@ -40,35 +40,43 @@ def yourturn():
         value = values_tp[0]
         total_cards += card + " "
         #ace set if 1 or 11
-        if value == 11:
-            if total_value + value > 21:
-                value = 1
-                
-            
+        if value == 11 and value + total_value > 21:
+            value = 1
         total_value += value
     print(space)
     print(f"dealers cards: \nvalue:0 \n\nyour cards: {total_cards} \nvalue: {total_value}")
+    print(f"\n{space}")
     hit_stand = input("HIT or STAND?\n")
+    hit_stand = hit_stand.lower()
     while hit_stand != "h" and hit_stand != "s":
-        hit_stand = input("input h for hit, S for stand")
+        hit_stand = input("invalid input, input H for hit or S for stand")
+        hit_stand = hit_stand.lower()
+    #HIT
     while hit_stand == "h":
         values_tp = evaluate()
         card = values_tp[1]
         value = values_tp[0]
         total_cards += card + " "
         total_value += value
-        if total_value < 21:
-            print(space)
-            print(f"dealers cards: \nvalue:0 \n\nyour cards: {total_cards} \nvalue: {total_value}")
-            hit_stand = input("HIT or STAND ")
-            while hit_stand != "h" and hit_stand != "s":
-                hit_stand = input("input h for hit, S for stand")
-        elif total_value == 21:
+
+        #BLACKJACK
+        if total_value == 21:
             BJ = True
             print(f"dealers cards: \nvalue:0 \n\nyour cards: {total_cards} \nvalue: {total_value}")
             print("BLACKJACK!")
             return (total_value, total_cards, BJ, lose)
             break
+        #under 21
+        elif total_value < 21:
+            print(space)
+            print(f"dealers cards: \nvalue:0 \n\nyour cards: {total_cards} \nvalue: {total_value}")
+            print(space)
+            hit_stand = input("HIT or STAND ")
+            hit_stand = hit_stand.lower()
+            while hit_stand != "h" and hit_stand != "s":
+                hit_stand = input("invalid input. type S for Stand or H for Hit")
+                hit_stand = hit_stand.lower()
+        #over 21
         elif total_value > 21:
             print(space)
             print(f"dealers cards: \nvalue:0 \n\nyour cards: {total_cards} \nvalue: {total_value}")
@@ -78,7 +86,7 @@ def yourturn():
             return (total_value, total_cards, BJ, lose)
             break
 
-
+    print(space)
     return (total_value, total_cards, BJ, lose)
 #turn of the dealer
 def dealer_turn():
@@ -96,47 +104,67 @@ def dealer_turn():
         if playerislose == True or playesisBJ == True:
             break
         card_valsuit = evaluate()
-        print(val_total)
         card = str(card_valsuit[1])
         card_value = int(card_valsuit[0])
+        if card_value == 11 and val_total + card_value > 21:
+            value = 1
         val_total  += int(card_value)
         card_total += (f"{str(card)} ")
         if val_total >= 17:
             if val_total <= 21:
-                if val_total >= player_total:
-                    print(f"dealers cards: {card_total}\nvalue: {card_value} \n\nyour cards: {player_cards} \nvalue: {player_total}")
+                if val_total >= player_val:
+                    print(f"dealers cards: {card_total}\nvalue: {val_total} \n\nyour cards: {player_cards} \nvalue: {player_val}")
                     print("you lost!\n")
                     win = False
                     return win
+                else:
+                    print(f"dealers cards: {card_total}\nvalue: {val_total} \n\nyour cards: {player_cards} \nvalue: {player_val}")
+                    print("you win!\n")
+                    win = True
+                    return win
             else:
-                print(f"dealers cards: {card_total}\nvalue: {card_value}\n\nyour cards: {player_cards} \nvalue: {player_total}")
+                print(f"dealers cards: {card_total}\nvalue: {val_total}\n\nyour cards: {player_cards} \nvalue: {player_val}")
                 print("you won!\n")
                 win = True
                 return win
 #game
 def game():
     balance = 1000
-    print(f"WELCOME TO BLACKJACK!\n                         ballance:{balance}")
-    bet = (input("\nPLACE YOUR BET(input x for game to end) "))
+    print(f"WELCOME TO BLACKJACK!                        ballance:{balance}\n")
+    bet = (input("\nPLACE YOUR BET(input x for game to end or r for Rules) \n"))
     bet = str(bet)
-    print (type(bet))
-    while isplaying == True:
+    while isplaying == True:    
+        if balance==0:
+            print("your balance is zero")
+            break
         
         #betting
         while not bet.isalpha() and bet and not bet.isnumeric():
             if bet.isnumeric():
-                bet = int(bet)  
-            elif bet.isalpha() and bet == "x":
+               if int(bet)<balance:
+                bet = (input("\ninsuficient funds please enter valid bet\n"))
+               elif bet<0:
+                bet = (input("\ncant bet a negative number\n"))  
+               else:
+                 bet = int(bet)  
+            elif bet.isalpha():
                 bet = str(bet)
+                bet = str(bet.lower())
             else:
                 print("enter valid input!")
+        if bet == "x":
+                print(f"thank you for playing! your final balance: {balance}")
+                break
+        elif bet == "r":
+                print("Try to get 21 or as close as possible without going over.\nNumber cards = their number, face cards = 10, Ace = 1 or 11.\nYou get 2 cards. You can hit (get more) or stand (stop).\nDealer must hit until 17 or more.\nClosest to 21 wins!\n\n\n\n\n\n\n\n")
+                
+                
         win = dealer_turn()
         if win == True:
             balance += int(bet)
         else:
             balance = balance - int(bet)
-        bet = input("\nPLACE YOUR BET(input x for game to end")
+        bet = input(f"\nPLACE YOUR BET(input X for game to end R for Rules)                         ballance:{balance}\n")
         bet = str(bet)
-print("ok")
 game()
 
