@@ -58,6 +58,7 @@ def yourturn():
             BJ = True
             print(f"dealers cards: \nvalue:0 \n ........................................\nyour cards: {total_cards} \nvalue: {total_value}")
             print("BLACKJACK!")
+            return (total_value, total_cards, BJ, lose)
             break
         elif total_value > 21:
             print(space)
@@ -65,16 +66,19 @@ def yourturn():
             print(space)
             print("you lost!")
             lose = True
+            return (total_value, total_cards, BJ, lose)
             break
 
-        return (total_value, total_cards, BJ, lose)
 
+    return (total_value, total_cards, BJ, lose)
+#turn of the dealer
 def dealer_turn():
     val_total = 0
+    playerislose = False
     card_total = ""
+    card_value = []
     card_valsuit = []
     player_value = yourturn()
-    print(type(player_value[3]))
     playerislose = player_value[3]
     playesisBJ = player_value[2]
     player_cards = str(player_value[1])
@@ -83,6 +87,7 @@ def dealer_turn():
         if playerislose == True or playesisBJ == True:
             break
         card_valsuit = evaluate()
+        print(val_total)
         card = str(card_valsuit[1])
         card_value = int(card_valsuit[0])
         print(type(card))
@@ -93,10 +98,10 @@ def dealer_turn():
         if val_total >= 17:
             if val_total <= 21:
                 if val_total >= player_total:
-                    print(f"dealers cards: {card_total}\nvalue: {val_total} \n ........................................\nyour cards: {player_cards} \nvalue: {player_total}")
+                    print(f"dealers cards: {card_total}\nvalue: {card_value} \n ........................................\nyour cards: {player_cards} \nvalue: {player_total}")
                     print("you lost!\n")
             else:
-                print(f"dealers cards: {card_total}\nvalue: {val_total} \n ........................................\nyour cards: {player_cards} \nvalue: {player_total}")
+                print(f"dealers cards: {card_total}\nvalue: {card_value} \n ........................................\nyour cards: {player_cards} \nvalue: {player_total}")
                 print("you won!\n")
 
 dealer_turn()
