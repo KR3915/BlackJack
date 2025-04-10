@@ -1,5 +1,4 @@
-SIMPLE COMMAND LINE BLACKJACK
-you start with 1000 currency
+you start with 1000 currency                      
 each round you place a bet 
 when asked to place a bet you can input r for rules or x to close the game
 RULES:
